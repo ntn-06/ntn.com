@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suporte Técnico - Neitan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(to bottom, #1a1a1a, #2d2d2d);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(40, 40, 40, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #0066cc;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #0066cc;
+            text-shadow: 0 0 10px rgba(0, 102, 204, 0.7);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            font-size: 4rem;
+            color: #0066cc;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .option-btn {
+            background: linear-gradient(to bottom, #004080, #0066cc);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 150px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .option-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 102, 204, 0.5);
+        }
+        
+        .option-btn i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .form-container {
+            background: rgba(50, 50, 50, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #444;
+            display: none;
+        }
+        
+        .form-title {
+            font-size: 1.5rem;
+            color: #0066cc;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background: #333;
+            color: #fff;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to bottom, #0066cc, #004080);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .submit-btn:hover {
+            background: linear-gradient(to bottom, #0080ff, #0055aa);
+        }
+        
+        .tickets-container {
+            display: none;
+        }
+        
+        .ticket {
+            background: rgba(60, 60, 60, 0.8);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 5px solid #0066cc;
+        }
+        
+        .ticket.resolved {
+            border-left-color: #00cc66;
+            opacity: 0.8;
+        }
+        
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .ticket-title {
+            font-size: 1.2rem;
+            color: #0066cc;
+        }
+        
+        .ticket-date {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .ticket-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .status-open {
+            background: #cc0000;
+            color: white;
+        }
+        
+        .status-resolved {
+            background: #00cc66;
+            color: white;
+        }
+        
+        .ticket-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .resolve-btn {
+            background: #00cc66;
+            color: white;
+        }
+        
+        .open-btn {
+            background: #cc0000;
+            color: white;
+        }
+        
+        .password-form {
+            background: rgba(50, 50, 50, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #444;
+            text-align: center;
+        }
+        
+        .password-input {
+            max-width: 300px;
+            margin: 0 auto 15px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .success {
+            background: rgba(0, 204, 102, 0.2);
+            border: 1px solid #00cc66;
+            color: #00cc66;
+        }
+        
+        .error {
+            background: rgba(204, 0, 0, 0.2);
+            border: 1px solid #cc0000;
+            color: #cc0000;
+        }
+        
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .funny-message {
+            font-style: italic;
+            margin-top: 10px;
+            color: #0066cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-headset"></i>
+            </div>
+            <h1>Suporte Técnico</h1>
+            <p class="subtitle">Problema técnico? Chame o Neitan! 👨‍💻</p>
+            <p class="funny-message">"Porque reiniciar não resolve tudo... mas resolve 99% dos casos!"</p>
+        </header>
+        
+        <div class="options">
+            <button class="option-btn" id="helpBtn">
+                <i class="fas fa-hands-helping"></i>
+                Preciso de Ajuda!
+            </button>
+            
+            <button class="option-btn" id="viewBtn">
+                <i class="fas fa-list"></i>
+                Ver Pedidos de Ajuda
+            </button>
+        </div>
+        
+        <div class="form-container" id="helpForm">
+            <h2 class="form-title">Abra um Chamado</h2>
+            
+            <div class="form-group">
+                <label for="userName">Seu Nome:</label>
+                <input type="text" id="userName" placeholder="Digite seu nome completo">
+            </div>
+            
+            <div class="form-group">
+                <label for="problemType">Tipo de Problema:</label>
+                <select id="problemType">
+                    <option value="">Selecione o tipo de problema</option>
+                    <option value="hardware">Problema de Hardware</option>
+                    <option value="software">Problema de Software</option>
+                    <option value="internet">Problema de Internet</option>
+                    <option value="email">Problema com E-mail</option>
+                    <option value="other">Outro</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="problemDescription">Descrição do Problema:</label>
+                <textarea id="problemDescription" placeholder="Descreva detalhadamente o problema que está enfrentando..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="urgency">Urgência:</label>
+                <select id="urgency">
+                    <option value="low">Baixa - Posso esperar um pouco</option>
+                    <option value="medium">Média - Preciso de ajuda hoje</option>
+                    <option value="high">Alta - IMBÍVEL TRABALHAR ASSIM! 😫</option>
+                </select>
+            </div>
+            
+            <button class="submit-btn" id="submitTicket">
+                <i class="fas fa-paper-plane"></i> Enviar Chamado
+            </button>
+        </div>
+        
+        <div class="password-form" id="passwordForm">
+            <h2 class="form-title">Acesso Restrito</h2>
+            <p>Área exclusiva para o Neitan. Digite a senha para visualizar os chamados.</p>
+            
+            <div class="form-group password-input">
+                <input type="password" id="adminPassword" placeholder="Digite a senha de acesso">
+            </div>
+            
+            <button class="submit-btn" id="accessBtn">
+                <i class="fas fa-lock-open"></i> Acessar
+            </button>
+        </div>
+        
+        <div class="tickets-container" id="ticketsContainer">
+            <h2 class="form-title">Chamados em Aberto</h2>
+            <div id="ticketsList">
+                <!-- Os chamados serão inseridos aqui via JavaScript -->
+            </div>
+        </div>
+        
+        <div id="message" class="message hidden"></div>
+        
+        <footer>
+            <p>Sistema de Chamados Técnicos - Desenvolvido para Neitan</p>
+            <p class="funny-message">"Se você está lendo isso, é porque não há chamados urgentes. Aproveite!"</p>
+        </footer>
+    </div>
+
+    <script>
+        // Elementos DOM
+        const helpBtn = document.getElementById('helpBtn');
+        const viewBtn = document.getElementById('viewBtn');
+        const helpForm = document.getElementById('helpForm');
+        const passwordForm = document.getElementById('passwordForm');
+        const ticketsContainer = document.getElementById('ticketsContainer');
+        const submitTicket = document.getElementById('submitTicket');
+        const accessBtn = document.getElementById('accessBtn');
+        const messageDiv = document.getElementById('message');
+        
+        // Senha de acesso (pode ser alterada)
+        const ADMIN_PASSWORD = "neitan123";
+        
+        // Array para armazenar os chamados
+        let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+        
+        // Event Listeners
+        helpBtn.addEventListener('click', showHelpForm);
+        viewBtn.addEventListener('click', showPasswordForm);
+        submitTicket.addEventListener('click', createTicket);
+        accessBtn.addEventListener('click', checkPassword);
+        
+        // Função para mostrar o formulário de ajuda
+        function showHelpForm() {
+            helpForm.style.display = 'block';
+            passwordForm.style.display = 'none';
+            ticketsContainer.style.display = 'none';
+            messageDiv.classList.add('hidden');
+        }
+        
+        // Função para mostrar o formulário de senha
+        function showPasswordForm() {
+            helpForm.style.display = 'none';
+            passwordForm.style.display = 'block';
+            ticketsContainer.style.display = 'none';
+            messageDiv.classList.add('hidden');
+        }
+        
+        // Função para criar um novo chamado
+        function createTicket() {
+            const userName = document.getElementById('userName').value;
+            const problemType = document.getElementById('problemType').value;
+            const problemDescription = document.getElementById('problemDescription').value;
+            const urgency = document.getElementById('urgency').value;
+            
+            if (!userName || !problemType || !problemDescription) {
+                showMessage('Por favor, preencha todos os campos.', 'error');
+                return;
+            }
+            
+            // Criar objeto do ticket
+            const newTicket = {
+                id: Date.now(),
+                userName: userName,
+                problemType: problemType,
+                problemDescription: problemDescription,
+                urgency: urgency,
+                status: 'open',
+                date: new Date().toLocaleString('pt-BR')
+            };
+            
+            // Adicionar ao array e salvar no localStorage
+            tickets.push(newTicket);
+            localStorage.setItem('tickets', JSON.stringify(tickets));
+            
+            // Limpar formulário
+            document.getElementById('userName').value = '';
+            document.getElementById('problemType').value = '';
+            document.getElementById('problemDescription').value = '';
+            document.getElementById('urgency').value = 'low';
+            
+            showMessage('Chamado aberto com sucesso! O Neitan entrará em contato em breve.', 'success');
+        }
+        
+        // Função para verificar a senha
+        function checkPassword() {
+            const passwordInput = document.getElementById('adminPassword').value;
+            
+            if (passwordInput === ADMIN_PASSWORD) {
+                passwordForm.style.display = 'none';
+                ticketsContainer.style.display = 'block';
+                renderTickets();
+            } else {
+                showMessage('Senha incorreta. Tente novamente.', 'error');
+            }
+            
+            document.getElementById('adminPassword').value = '';
+        }
+        
+        // Função para renderizar os tickets
+        function renderTickets() {
+            const ticketsList = document.getElementById('ticketsList');
+            ticketsList.innerHTML = '';
+            
+            if (tickets.length === 0) {
+                ticketsList.innerHTML = '<p class="message">Nenhum chamado encontrado. Aproveite o silêncio! 😊</p>';
+                return;
+            }
+            
+            // Ordenar tickets: abertos primeiro, depois resolvidos
+            const sortedTickets = [...tickets].sort((a, b) => {
+                if (a.status === 'open' && b.status !== 'open') return -1;
+                if (a.status !== 'open' && b.status === 'open') return 1;
+                return 0;
+            });
+            
+            sortedTickets.forEach(ticket => {
+                const ticketElement = document.createElement('div');
+                ticketElement.className = `ticket ${ticket.status === 'resolved' ? 'resolved' : ''}`;
+                
+                ticketElement.innerHTML = `
+                    <div class="ticket-header">
+                        <div>
+                            <h3 class="ticket-title">${ticket.userName} - ${getProblemTypeText(ticket.problemType)}</h3>
+                            <span class="ticket-date">${ticket.date}</span>
+                        </div>
+                        <span class="ticket-status ${ticket.status === 'open' ? 'status-open' : 'status-resolved'}">
+                            ${ticket.status === 'open' ? 'EM ABERTO' : 'RESOLVIDO'}
+                        </span>
+                    </div>
+                    <p><strong>Urgência:</strong> ${getUrgencyText(ticket.urgency)}</p>
+                    <p><strong>Descrição:</strong> ${ticket.problemDescription}</p>
+                    <div class="ticket-actions">
+                        ${ticket.status === 'open' ? 
+                            `<button class="action-btn resolve-btn" onclick="updateTicketStatus(${ticket.id}, 'resolved')">
+                                <i class="fas fa-check"></i> Marcar como Resolvido
+                            </button>` : 
+                            `<button class="action-btn open-btn" onclick="updateTicketStatus(${ticket.id}, 'open')">
+                                <i class="fas fa-undo"></i> Reabrir Chamado
+                            </button>`
+                        }
+                        <button class="action-btn" style="background: #cc0000; color: white;" onclick="deleteTicket(${ticket.id})">
+                            <i class="fas fa-trash"></i> Excluir
+                        </button>
+                    </div>
+                `;
+                
+                ticketsList.appendChild(ticketElement);
+            });
+        }
+        
+        // Função para atualizar o status do ticket
+        function updateTicketStatus(ticketId, status) {
+            tickets = tickets.map(ticket => {
+                if (ticket.id === ticketId) {
+                    return { ...ticket, status };
+                }
+                return ticket;
+            });
+            
+            localStorage.setItem('tickets', JSON.stringify(tickets));
+            renderTickets();
+            showMessage(`Chamado ${status === 'resolved' ? 'resolvido' : 'reaberto'} com sucesso!`, 'success');
+        }
+        
+        // Função para excluir um ticket
+        function deleteTicket(ticketId) {
+            if (confirm('Tem certeza que deseja excluir este chamado?')) {
+                tickets = tickets.filter(ticket => ticket.id !== ticketId);
+                localStorage.setItem('tickets', JSON.stringify(tickets));
+                renderTickets();
+                showMessage('Chamado excluído com sucesso!', 'success');
+            }
+        }
+        
+        // Funções auxiliares para obter texto formatado
+        function getProblemTypeText(type) {
+            const types = {
+                'hardware': 'Problema de Hardware',
+                'software': 'Problema de Software',
+                'internet': 'Problema de Internet',
+                'email': 'Problema com E-mail',
+                'other': 'Outro Problema'
+            };
+            return types[type] || 'Tipo desconhecido';
+        }
+        
+        function getUrgencyText(urgency) {
+            const levels = {
+                'low': 'Baixa',
+                'medium': 'Média',
+                'high': 'Alta (URGENTE)'
+            };
+            return levels[urgency] || 'Não especificado';
+        }
+        
+        // Função para mostrar mensagens
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.classList.remove('hidden');
+            
+            // Esconder a mensagem após 5 segundos
+            setTimeout(() => {
+                messageDiv.classList.add('hidden');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
